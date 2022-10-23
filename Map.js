@@ -13,8 +13,8 @@ export default function MapScreen({ route }) {
     const url = 'http://www.mapquestapi.com/geocoding/v1/address?'
   
     useEffect( () => {
-        getLocation()  
-      }, []);
+      getLocation()  
+    }, []);
     
 
       const getLocation = async () => {
@@ -39,13 +39,7 @@ export default function MapScreen({ route }) {
           coordinate={location}
           title={search} />
       </MapView>
-      <View 
-          style={{ width: '100%'}}>
-         <Button 
-          onPress={getLocation} 
-          title="Show">
-        </Button>
-        </View>
+      
       <StatusBar style="auto" />
     </View>
   );
