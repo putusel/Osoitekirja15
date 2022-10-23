@@ -1,7 +1,7 @@
 import { React} from 'react';
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import MapView, { Marker } from'react-native-maps';
 import * as Location from 'expo-location';
 
@@ -12,25 +12,10 @@ export default function MapScreen({ route }) {
     const apikey = '9CZ5yt0C4TcCgBMqY6HffGPrdansAJrG';
     const url = 'http://www.mapquestapi.com/geocoding/v1/address?'
   
-    useEffect(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          Alert.alert('No permission to get location')
-          return;
-        }
-
-        let position = await Location.getCurrentPositionAsync({});
-        const location = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.0322,
-          longitudeDelta: 0.0221
-        }
-        
-        setLocation(location);
-      })();
-    }, []);
+    useEffect( () => {
+        getLocation()  
+      }, []);
+    
 
       const getLocation = async () => {
       const response = await fetch(`${url}key=${apikey}&location=${search}`); 
@@ -54,7 +39,13 @@ export default function MapScreen({ route }) {
           coordinate={location}
           title={search} />
       </MapView>
-      
+      <View 
+          style={{ width: '100%'}}>
+         <Button 
+          onPress={getLocation} 
+          title="Show">
+        </Button>
+        </View>
       <StatusBar style="auto" />
     </View>
   );

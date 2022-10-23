@@ -27,12 +27,20 @@ export default function MyPlacesScreen({navigation}) {
     }
   // delete item from table
   const deleteItem = (id) => {
-    db.transaction(
-      tx => {
-        tx.executeSql(`delete from places where id = ?;`, [id]);
-      }, null, updateList
-    )    
-  }
+  Alert.alert("Do you want to remove the address?", "The address will be deletd permanently",
+      [
+        {
+          text: "Cancel"
+        },
+        { text: "OK", onPress: () =>
+          db.transaction(tx => {
+            tx.executeSql('delete from places where id = ?;', [id]);
+          }, null, updateList)
+        }
+      ]
+    );
+  };
+
 
   // update places
   const updateList = () => {
@@ -59,7 +67,7 @@ export default function MyPlacesScreen({navigation}) {
       </ListItem.Content>
     </ListItem>
   );
-
+  
   return (
     <View style={styles.container}>
       <Input
