@@ -13,7 +13,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='MyPlaces'>
-        <Stack.Screen name="MyPlaces" component={MyPlacesScreen} />
+        <Stack.Screen name="My Places" component={MyPlacesScreen} />
         <Stack.Screen name="Map" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
