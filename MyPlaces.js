@@ -1,27 +1,25 @@
-import * as React from 'react';
-import { useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, useState } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('coursedb.db');
 
-export default function MyPlacesScreen({ route, navigation }) {
+export default function MyPlacesScreen({ navigation }) {
 
-    const{ data } = route.params;
     const [place, setPlace] = useState('');
     const [places, setPlaces] = useState([]);
 
     useEffect(() => {  
         db.transaction(tx => {    
-          tx.executeSql('create table if not exists (id integer primary key not null, place text);');  
+          tx.executeSql('create table if not exists db (id integer primary key not null, place text);');  
         }, null, updateList);
       }, []);
     
-      // Save product
+      // Save place
       const savePlace = () => {
         db.transaction(tx => {
-          tx.executeSql('insert into places (place) values (?, ?);', [place]);    
+          tx.executeSql('insert into db (place) values (?, ?);', [place]);    
         }, null, updateList
       )
       setPlace('');
@@ -29,7 +27,7 @@ export default function MyPlacesScreen({ route, navigation }) {
     }
     const updateList = () => {
         db.transaction(tx => {
-          tx.executeSql('select * from places;', [], (_, { rows }) =>
+          tx.executeSql('select * from db;', [], (_, { rows }) =>
             setProducts(rows._array)
           ); 
         });
@@ -37,17 +35,19 @@ export default function MyPlacesScreen({ route, navigation }) {
       const deleteItem = (id) => {
         db.transaction(
           tx => {
-            tx.executeSql(`delete from products where id = ?;`, [id]);
+            tx.executeSql(`delete from db where id = ?;`, [id]);
           }, null, updateList
         )    
       }
       const renderItem = ({item}) => (
         <ListItem bottomDivider>
           <ListItem.Content>
-            <ListItem.Title>{item.place}</ListItem.Title>
-              <ListItem.Subtitle>"test"</ListItem.Subtitle>
+            <ListItem.Title>numberOfLines={1} onLongPress={() => deleteItem(item.id)}{item.place}</ListItem.Title>
           </ListItem.Content>
-          <Icon type='material' name='delete' color='red' onPress={ () => deleteItem(item.id)} />
+          <ListItem onPress={() => navigation.navigate('Map', {place: item.place})}>
+              <Text style={{color: 'grey'}}>Show on map</Text>
+              <Icon name="place" size={18} color='grey' />
+            </ListItem>
         </ListItem>
       )
     
@@ -67,18 +67,19 @@ export default function MyPlacesScreen({ route, navigation }) {
      
    return (  
     <View style={styles.container}>
-        <Text style={styles.text}>My Places</Text>
+        
         <Input   
         placeholder='Type in address' 
         label='PLACEFINDER'  
         onChangeText={(place) => setPlace(place)}
         value={place}
-      />
-      <Button raised icon={{name: 'save'}} 
+        />
+        <Button raised icon={{name: 'save'}} 
         onPress={savePlace}
         title="SAVE" 
+        
       />
-    <Button style={styles.button}onPress={() => navigation.navigate('Map', {data: data})} title="Map"/>  
+    
     </View>  
     );
 }
@@ -103,7 +104,8 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       fontSize: 20,
     },
-    text : {
-      fontSize: 20,
+    button : {
+      borderColor: 'gray',
+      width: 200,
     }
   });

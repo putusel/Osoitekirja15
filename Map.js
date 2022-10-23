@@ -1,16 +1,17 @@
 import { React} from 'react';
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button, Dimensions } from 'react-native';
+import { StyleSheet, View, TextInput, Button, Dimensions } from 'react-native';
 import MapView, { Marker } from'react-native-maps';
 import * as Location from'expo-location';
 
-export default function MapScreen({ navigation }) {
+export default function MapScreen({ route }) {
   
-  const [location, setLocation] = useState({latitude: 0, longitude: 0, latitudeDelta: 0.0322, longitudeDelta: 0.0221 }); // State where location is saved  
-  const [search, setSearch] = useState('');
-  const apikey = '9CZ5yt0C4TcCgBMqY6HffGPrdansAJrG';
-  const url = 'http://www.mapquestapi.com/geocoding/v1/address?'
+    const{ place } = route.params;
+    const [location, setLocation] = useState({latitude: 0, longitude: 0, latitudeDelta: 0.0322, longitudeDelta: 0.0221 }); // State where location is saved  
+    const [search, setSearch] = useState('');
+    const apikey = '9CZ5yt0C4TcCgBMqY6HffGPrdansAJrG';
+    const url = 'http://www.mapquestapi.com/geocoding/v1/address?'
   
     useEffect(() => {
       (async () => {
@@ -55,10 +56,6 @@ export default function MapScreen({ navigation }) {
           title={search} />
       </MapView>
       <View>
-        <TextInput 
-          placeholder="enter a location" 
-          style={styles.input} 
-          onChangeText={search => setSearch(search)}/>
         <View 
           style={{ width:Dimensions.get("window").width * 1.0, flexDirection: 'row', justifyContent: 'center', marginTop: 5}}>
          <Button 
