@@ -1,15 +1,14 @@
 import { React} from 'react';
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, TextInput, Button, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from'react-native-maps';
-import * as Location from'expo-location';
+import * as Location from 'expo-location';
 
 export default function MapScreen({ route }) {
   
-    const{ place } = route.params;
+    const{ search } = route.params;
     const [location, setLocation] = useState({latitude: 0, longitude: 0, latitudeDelta: 0.0322, longitudeDelta: 0.0221 }); // State where location is saved  
-    const [search, setSearch] = useState('');
     const apikey = '9CZ5yt0C4TcCgBMqY6HffGPrdansAJrG';
     const url = 'http://www.mapquestapi.com/geocoding/v1/address?'
   
@@ -55,15 +54,7 @@ export default function MapScreen({ route }) {
           coordinate={location}
           title={search} />
       </MapView>
-      <View>
-        <View 
-          style={{ width:Dimensions.get("window").width * 1.0, flexDirection: 'row', justifyContent: 'center', marginTop: 5}}>
-         <Button 
-          onPress={getLocation} 
-          title="Show">
-        </Button>
-        </View>
-      </View>
+      
       <StatusBar style="auto" />
     </View>
   );
@@ -81,9 +72,5 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%"
   },
-  input: {
-    borderWidth: 1,
-    height: 40,
-    justifyContent: 'center'
-  }
+  
 });
